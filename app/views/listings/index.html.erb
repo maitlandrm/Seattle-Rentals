@@ -1,0 +1,9 @@
+<div class = "container">
+	<% @listings.each do |listing| %>
+		<div class = "property">
+			<%= image_tag("" + listing.main[75..listing.main.length], size: "150") %>
+			<h5><%= listing.neighborhood %></h5>
+			<a class="btn btn-default" href="/listings/<%= listing.id %>">View</a> 
+		</div>
+	<% end %>
+</div>

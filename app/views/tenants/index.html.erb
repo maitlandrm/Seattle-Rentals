@@ -1,0 +1,72 @@
+<div class = 'container'>
+<h1><%= flash[:success] %></h1>
+
+	<p class = "text-danger"><%= flash[:warning] %></p>
+	<form class = "form-inline" method = "post" action = "/listings/find/">
+		<input type = "hidden" name = "authenticity_token" value = "<%= form_authenticity_token %>" />
+		<div class = "form-group">
+			<label for = "neighborhood">Neighborhood</label>
+			<select id = "neighborhood" class = "form-control" name = "neighborhood">
+				<option value = "Admiral District">Admiral District</option>
+				<option value = "Alki">Alki</option>
+				<option value = "Ballard">Ballard</option>
+				<option value = "Beacon Hill">Beacon Hill</option>
+				<option value = "Belltown">Belltown</option>
+				<option value = "Capitol Hill">Capitol Hill</option>
+				<option value = "Columbia City">Columbia City</option>
+				<option value = "Crown Hill">Crown Hill</option>
+				<option value = "Eastlake">Eastlake</option>
+				<option value = "First Hill">First Hill</option>
+				<option value = "Fremont">Fremont</option>
+				<option value = "Georgetown">Georgetown</option>
+				<option value = "Green Lake">Green Lake</option>
+				<option value = "Harbor Island">Harbor Island</option>
+				<option value = "Licton Springs">Licton Springs</option>
+				<option value = "Loyal Heights">Loyal Heights</option>
+				<option value = "Madison Park">Madison Park</option>
+				<option value = "Madrona">Madrona</option>
+				<option value = "Magnolia">Magnolia</option>
+				<option value = "Maple Leaf">Maple Leaf</option>
+				<option value = "Mercer Island">Mercer Island</option>
+				<option value = "Montlake">Montlake</option>
+				<option value = "Mount Baker">Mount Baker</option>
+				<option value = "Northgate">Northgate</option>
+				<option value = "Othello">Othello</option>
+				<option value = "Phinney Ridge">Phinney Ridge</option>
+				<option value = "Pioneer Square">Pioneer Square</option>
+				<option value = "Aurora"> :( 8 < - </option>
+				<option value = "Queen Anne">Queen Anne</option>
+				<option value = "Rainier Valley">Rainier Valley</option>
+				<option value = "Ravenna">Ravenna</option>
+				<option value = "Sand Point">Sand Point</option>
+				<option value = "Soutlake">Southlake</option>
+				<option value = "U District">U District</option>
+				<option value = "Wallingford">Wallingford</option>
+				<option value = "Wedgewood">Wedgwood</option>
+				<option value = "Westlake">Westlake</option>
+				<option value = "West Seattle">West Seattle</option>
+				<option value = "White Center">White Center</option>
+			</select>
+		</div>
+		<div class = "form-group">
+			<label for = "price_min">Minimum Price </label>
+			<select name = "price_min" id = "price_min" class = "form-control">
+				<% i = 500
+				while i < 50000 do %>
+					<option value = "<%= i %>">$<%= i %></option>
+				<% i = i + 500
+				end %>
+			</select>
+			<label for = "price_max">Maximum Price</label>
+			<select name = "price_max" id = "price_max" class = "form-control">
+				<% i = 500
+				while i < 50000 do %>
+					<option value = "<%= i %>">$<%= i %></option>
+				<% i = i + 500
+				end %>
+			</select>
+		</div>
+		<input type = "submit" value = "Search" class = "btn btn-primary btn-lg">
+
+	</form> 
+</div>

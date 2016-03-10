@@ -1,0 +1,29 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+.white{
+	color:white;
+}
+
+.option{
+	display: inline-block;
+}
+
+.right{
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 10%;
+}
+
+.left{
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 10%;
+	
+}
+.property{
+	display:inline-block;
+	margin-right: 5%;
+	width: 200px;
+	vertical-align: top;
+}

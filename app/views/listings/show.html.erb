@@ -1,0 +1,127 @@
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRW7rtwBxiUmpxa1hyP8F3kede-D60hm0	
+&callback=initMap"
+    async defer></script>
+<script type="text/javascript">
+	var map;
+	  function initMap() {
+	    map = new google.maps.Map(document.getElementById("map"), {
+	      center: {lat: 47.6097, lng: -122.3331},
+	      zoom: 10
+	    });
+	  }
+	 
+
+</script>
+
+
+<div class = 'container'>
+	<% if current_user && current_user.has_attribute?(:business) %>
+		<% if @listing.main == nil %>
+			<h1>Set Main Photo</h1>
+			<% @listing.avatars.each do |photo| %>
+				<% @str = photo.file.file %>
+				<div class = "option">
+					<%= image_tag("" + @str[75..@str.length], size: "150") %>
+					<form method = 'post' action = '/listings/<%= @listing.id %>' class = "form-horizontal">
+						<input type = "hidden" name = "authenticity_token" value = "<%= form_authenticity_token %>" />
+						<input type = "hidden" name = "_method" value = "patch" />
+						<input type = "hidden" value = "<%= @str %>" name = "listing[main]" />
+						<input type="submit" value = "Choose" class="btn btn-default active" />
+					</form>
+				</div>
+			<% end %>
+		<% else %>
+			<h2>Main Photo:</h2>
+			<%= image_tag("" + @listing.main[75..@listing.main.length], size: "150") %>
+			<h2>Edit</h2>
+			<h4>Change Main Photo:</h4>
+			<% @listing.avatars.each do |photo| %>
+				<% @str = photo.file.file %>
+				<div class = "option">
+					<%= image_tag("" + @str[75..@str.length], size: "150") %>
+					<form method = 'post' action = '/listings/<%= @listing.id %>' class = "form-horizontal">
+						<input type = "hidden" name = "authenticity_token" value = "<%= form_authenticity_token %>" />
+						<input type = "hidden" name = "_method" value = "patch" />
+						<input type = "hidden" value = "<%= @str %>" name = "listing[main]" />
+						<input type="submit" value = "Choose" class="btn btn-default active" />
+					</form>
+				</div>
+			<% end %>
+			<br>
+			<br>
+			<a class="btn btn-default btn-primary" href="/landlords" role="button" >Back</a>
+			<!-- A TAG! --> 
+		<% end %>
+	<% elsif current_user %>
+			<div class = "left">
+			<h3>Neighborhood: <%= @listing.neighborhood %></h3>
+			<h3>Price: $<%= @listing.price %></h3>
+			<h3>Description:</h3>
+			<h5><%= @listing.description %></h5>
+			<h3>Bathrooms: <%= @listing.baths %></h3>
+			<h3>Half-Bathrooms: <%= @listing.half_baths %></h3>
+			<h3>Bedrooms: <%= @listing.beds %></h3>
+			<% if @listing.wheelchair_accessible ==true || @listing.pet_friendly == true || @listing.hot_tub ==true || @listing.pool == true || @listing.paid_utils == true %>
+				<h3>Other:</h3>
+				<% if @listing.wheelchair_accessible == true %>
+					<h4>Wheelchair Accessible</h4>
+				<% end %>
+				<% if @listing.pet_friendly == true %>
+					<h4>Pet Friendly</h4>
+				<% end %>
+				<% if @listing.hot_tub == true %>
+					<h4>Hot Tub</h4>
+				<% end %>
+				<% if @listing.pool == true %>
+					<h4>Pool</h4>
+				<% end %>
+				<% if @listing.paid_utils == true %>
+					<h4>Paid Utilities</h4>
+				<% end %>
+			<% end %>
+		</div>
+		<div class = "right" >
+			<h3><%= @listing. address.to_s + " " + @listing.city + " " + @listing.state + " " + @listing.zip.to_s %> </h3>
+		<div id = "map" style = "width: 400px; height: 400px;"></div>
+		</div>
+
+		<% @listing.avatars.each do |photo| %>
+			<% @str = photo.file.file %>
+				<%= image_tag("" + @str[75..@str.length], size: "400") %>
+		<% end %>
+	<% else %>
+		<h3>Neighborhood: <%= @listing.neighborhood %></h3>
+		<h3>Price: $<%= @listing.price %></h3>
+		<h3>Description:</h3>
+		<h5><%= @listing.description %></h5>
+		<h3>Bathrooms: <%= @listing.baths %></h3>
+		<h3>Half-Bathrooms: <%= @listing.half_baths %></h3>
+		<h3>Bedrooms: <%= @listing.beds %></h3>
+
+		<% if @listing.wheelchair_accessible ==true || @listing.pet_friendly == true || @listing.hot_tub ==true || @listing.pool == true || @listing.paid_utils == true %>
+			<h3>Other:</h3>
+			<ul>
+				<% if @listing.wheelchair_accessible == true %>
+					<li>Wheelchair Accessible</li>
+				<% end %>
+				<% if @listing.pet_friendly == true %>
+					<li>Pet Friendly</li>
+				<% end %>
+				<% if @listing.hot_tub == true %>
+					<li>Hot Tub</li>
+				<% end %>
+				<% if @listing.pool == true %>
+					<li>Pool</li>
+				<% end %>
+				<% if @listing.paid_utils == true %>
+					<li>Paid Utilities</li>
+				<% end %>
+			</ul>
+		<% end %>
+		<% @listing.avatars.each do |photo| %>
+			<% @str = photo.file.file %>
+				<%= image_tag("" + @str[75..@str.length], size: "400") %>
+		<% end %>
+	<% end %>
+</div>

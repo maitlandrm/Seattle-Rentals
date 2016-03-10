@@ -1,0 +1,153 @@
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRW7rtwBxiUmpxa1hyP8F3kede-D60hm0&libraries=places"></script>
+<script type="text/javascript">
+
+var placeSearch, autocomplete;
+var componentForm = {
+  street_number: 'short_name',
+  route: 'long_name',
+  locality: 'long_name',
+  administrative_area_level_1: 'short_name',
+  country: 'long_name',
+  postal_code: 'short_name'
+};
+
+function initAutocomplete() {
+  // Create the autocomplete object, restricting the search to geographical
+  // location types.
+  
+
+  autocomplete = new google.maps.places.Autocomplete(
+      /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')).focus(geolocate()),
+
+      {types: ['geocode']});
+
+  // When the user selects an address from the dropdown, populate the address
+  // fields in the form.
+  autocomplete.addListener('place_changed', fillInAddress);
+}
+
+// [START region_fillform]
+function fillInAddress() {
+  // Get the place details from the autocomplete object.
+  var place = autocomplete.getPlace();
+
+  for (var component in componentForm) {
+    document.getElementById(component).value = '';
+    document.getElementById(component).disabled = false;
+  }
+
+  // Get each component of the address from the place details
+  // and fill the corresponding field on the form.
+  for (var i = 0; i < place.address_components.length; i++) {
+    var addressType = place.address_components[i].types[0];
+    if (componentForm[addressType]) {
+      var val = place.address_components[i][componentForm[addressType]];
+      document.getElementById(addressType).value = val;
+    }
+  }
+}
+// [END region_fillform]
+
+// [START region_geolocation]
+// Bias the autocomplete object to the user's geographical location,
+// as supplied by the browser's 'navigator.geolocation' object.
+function geolocate() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var geolocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      var circle = new google.maps.Circle({
+        center: geolocation,
+        radius: position.coords.accuracy
+      });
+      autocomplete.setBounds(circle.getBounds());
+    });
+  }
+}
+// [END region_geolocation]
+</script>
+<div class = 'container'>
+	<h1>Welcome Back, <%= current_user.first_name %></h1>
+	<h2>Your Properties</h2>
+	<% @listings.each do |listing| %>
+	<div class = "property">
+		<%= image_tag("" + listing.main[75..listing.main.length], size: "150") %>
+		<p><%= listing.address + " " + listing.city + " " + listing.state + " " + listing.zip.to_s %></p>
+		<p><%= listing.neighborhood %></p>
+		<a class="btn btn-default" href="listings/<%= listing.id %>">Edit</a>
+	</div>
+	<% end %>
+	<p>Put properties here</p>
+	<h2>Add a Property</h2>
+	<div class = "form-group">
+		<%= form_for Listing.new, html: { multipart: true } do |f| %>
+			<div class = "form-group">
+				<%= f.label :neighborhood %>
+				<%= f.select :neighborhood,
+				  options_for_select([['Admiral District', 'Admiral District'],['Alki', 'Alki'], ['Ballard', 'Ballard'], ['Beacon Hill', 'Beacon Hill'], ['Belltown', 'Belltown'], ['Capitol Hill', 'Capitol Hill'], ['Columbia City', 'Columbia City'], ['Crown Hill', 'Crown Hill'], ['Eastlake', 'Eastlake'], ['First Hill', 'First Hill'], ['Fremont', 'Fremont'], ['Georgetown', 'Georgetown'], ['Green Lake', 'Green Lake'], ['Harbor Island', 'Harbor Island'], ['Licton Springs', 'Licton Springs'], ['Loyal Heights', 'Loyal Heights'], ['Madison Park', 'Madison Park'], ['Madrona', 'Madrona'], ['Magnolia', 'Magnolia'], ['Maple Leaf', 'Maple Leaf'], ['Mercer Island', 'Mercer Island'], ['Montlake', 'Montlake'], ['Mount Baker', 'Mount Baker'], ['Northgate', 'Northgate'], ['Othello', 'Othello'], ['Phinney Ridge', 'Phinney Ridge'], ['Pioneer Square', 'Pioneer Square'], [':( 8 < -', 'Aurora'], ['Queen Anne', 'Queen Anne'], ['Rainier Valley', 'Rainier Valley'], ['Ravenna', 'Ravenna'], ['Sand Point', 'Sand Point'], ['Southlake', 'Southlake'], ['U District', 'U District'], ['Wallingford', 'Wallingford'], ['Wedgwood', 'Wedgwood'], ['Westlake', 'Westlake'], ['West Seattle', 'West Seattle'], ['White Center', 'White Center']], 38)%>
+			</div>
+			<div class = "form-group">
+				<%= f.label :address %>
+				<%= f.text_field :address, :autofocus => true, :html => {id: "autocomplete", :onfocus => "geolocate();"} %>
+			</div>
+			<div class = "form-group">
+				<%= f.label :city %>
+				<%= f.text_field :city %>
+			</div>
+			<div class = "form-group">
+				<%= f.label :state %>
+				<%= f.text_field :state %>
+			</div>
+			<div class = "form-group">
+				<%= f.label :zip %>
+				<%= f.text_field :zip %>
+			</div>
+			<div class = "form-group">
+				<%= f.label :price %>
+				<%= f.number_field :price %>
+			</div>
+			<div class = "form-group">
+				<%= f.label :type %>
+				<%= f.select :category,
+				  options_for_select([['Aparment', 'Apartment'],['House', 'House'], ['Guest House', 'Guest House'], ['Condo', 'Condo'], ['House Boat', 'House Boat'], ['Storage', 'Storage']], 6)%>
+			</div>
+			<div class = "form-group">
+				<%= f.label :description %>
+				<br>
+				<%= f.text_area :description, cols: 50, rows: 5 %>
+			</div>
+			<div class = "form-group">
+				<h4>Check all that apply</h4>
+				<%= f.label :pet_friendly %>
+				<%= f.check_box "pet_friendly" %>
+				<%= f.label :hot_tub %>
+				<%= f.check_box "hot_tub" %>
+				<%= f.label :pool %>
+				<%= f.check_box "pool" %>
+				<%= f.label :paid_utilities %>
+				<%= f.check_box "paid_utils" %>
+				<%= f.label :wheelchair_accessible %>
+				<%= f.check_box "wheelchair_accessible" %>
+			</div>
+			<div class = "form-group">
+				<%= f.label :number_of_bathrooms %>
+				<%= f.number_field :baths %>
+			</div>
+			<div class = "form-group">
+				<%= f.label :number_of_half_bathrooms %>
+				<%= f.number_field :half_baths %>
+			</div>
+			<div class = "form-group">
+				<%= f.label :number_of_bedrooms %>
+				<%= f.number_field :beds %>
+			</div>
+			<div class = "form-group">
+				<%= f.label :avatar %>
+				<%= f.file_field :avatars, multiple: true, accept: "image/jpeg, image/jpg, image/gif, image/png" %>
+			</div>
+
+			<%= f.submit "Submit" %>
+<% end %>
+	</div>
