@@ -10,6 +10,7 @@
 <nav class="navbar navbar-inverse">
 	<div class="container">
 		<div id="navbar">
+			<!-- Start check for login/logout -->
 			<% if current_user %>
 				<ul class="nav navbar-nav pull-right">
 					<% if current_user.has_attribute?(:image_url) %>

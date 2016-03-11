@@ -1,4 +1,4 @@
-
+<!-- MAP -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRW7rtwBxiUmpxa1hyP8F3kede-D60hm0	
 &callback=initMap"
     async defer></script>
@@ -13,10 +13,15 @@
 	 
 
 </script>
-
+<!-- END MAP -->
+<!-- STATES -->
+<% states = %w{AL AK AZ AR CA CO CT DC DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY} %>
+<!-- END STATES -->
 
 <div class = 'container'>
-	<% if current_user && current_user.has_attribute?(:business) %>
+	<!-- IF THE CURRENT USER IS LANDLORD -->
+	<% if current_user && current_user.has_attribute?(:business) && @listing.landlord_id == current_user.id %>
+		<!-- IF THE LANDLORD HAS NOT YET SET A MAIN PHOTO -->
 		<% if @listing.main == nil %>
 			<h1>Set Main Photo</h1>
 			<% @listing.avatars.each do |photo| %>
@@ -31,6 +36,7 @@
 					</form>
 				</div>
 			<% end %>
+		<!-- EDIT OPTIONS FOR LANDLORD -->
 		<% else %>
 			<h2>Main Photo:</h2>
 			<%= image_tag("" + @listing.main[75..@listing.main.length], size: "150") %>
@@ -48,13 +54,171 @@
 					</form>
 				</div>
 			<% end %>
+			<h4>Other changes:</h4>
+			<form method = 'post' action = '/listings/<%= @listing.id %>'>
+				<input type = "hidden" name = "authenticity_token" value = "<%= form_authenticity_token %>" />
+				<input type = "hidden" name = "_method" value = "patch" />
+				<!-- neighborhood -->
+				<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+					<label for = "neighborhood">Neighborhood</label>
+					<select id = "neighborhood" class = "form-control" name = "listing[neighborhood]">
+						<option value = "<%= @listing.neighborhood %>"><%= @listing.neighborhood %></option>
+						<option value = "Admiral District">Admiral District</option>
+						<option value = "Alki">Alki</option>
+						<option value = "Ballard">Ballard</option>
+						<option value = "Beacon Hill">Beacon Hill</option>
+						<option value = "Belltown">Belltown</option>
+						<option value = "Capitol Hill">Capitol Hill</option>
+						<option value = "Columbia City">Columbia City</option>
+						<option value = "Crown Hill">Crown Hill</option>
+						<option value = "Eastlake">Eastlake</option>
+						<option value = "First Hill">First Hill</option>
+						<option value = "Fremont">Fremont</option>
+						<option value = "Georgetown">Georgetown</option>
+						<option value = "Green Lake">Green Lake</option>
+						<option value = "Harbor Island">Harbor Island</option>
+						<option value = "Licton Springs">Licton Springs</option>
+						<option value = "Loyal Heights">Loyal Heights</option>
+						<option value = "Madison Park">Madison Park</option>
+						<option value = "Madrona">Madrona</option>
+						<option value = "Magnolia">Magnolia</option>
+						<option value = "Maple Leaf">Maple Leaf</option>
+						<option value = "Mercer Island">Mercer Island</option>
+						<option value = "Montlake">Montlake</option>
+						<option value = "Mount Baker">Mount Baker</option>
+						<option value = "Northgate">Northgate</option>
+						<option value = "Othello">Othello</option>
+						<option value = "Phinney Ridge">Phinney Ridge</option>
+						<option value = "Pioneer Square">Pioneer Square</option>
+						<option value = "Aurora"> :( 8 < - </option>
+						<option value = "Queen Anne">Queen Anne</option>
+						<option value = "Rainier Valley">Rainier Valley</option>
+						<option value = "Ravenna">Ravenna</option>
+						<option value = "Sand Point">Sand Point</option>
+						<option value = "Soutlake">Southlake</option>
+						<option value = "U District">U District</option>
+						<option value = "Wallingford">Wallingford</option>
+						<option value = "Wedgewood">Wedgwood</option>
+						<option value = "Westlake">Westlake</option>
+						<option value = "West Seattle">West Seattle</option>
+						<option value = "White Center">White Center</option>
+					</select>
+				</div>
+				<!-- end neighborhood -->
+				<!-- start address -->
+				<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+					<label for = "address">Street Address</label>
+					<input type = "text" name = "listing[address]" value = "<%= @listing.address %>"/>
+				</div>
+				<!-- end address -->
+				<!-- start city -->
+				<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+					<label for = "city">City</label>
+					<input type = "text" name = "listing[city]" value = "<%= @listing.city %>" />
+				</div>
+				<!-- end city -->
+				<!-- start state -->
+				<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+					<label for = "state">State</label>
+					<select class = "form-control" id = "state" name = "listing[state]">
+						<option value = "<%= @listing.state %>"><%= @listing.state %></option>
+						<% states.each do |s|%>
+						<option value = "<%= s %>"><%= s %></option>
+						<% end %>	
+					</select>
+				</div>
+				<!-- end state -->
+				<!-- start zip -->
+				<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+					<label for = "zip">Zip Code</label>
+					<input type = "text" name = "listing[zip]" value = "<%= @listing.zip %>" />
+				</div>
+				<!-- end zip -->
+				<!-- start price -->
+				<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+					<label for = "price">Price</label>
+					<select name = "listing[price]" id = "price" class = "form-control">
+						<option value = "<%= @listing.price %>">$<%= @listing.price %></option>
+						<% i = 500
+						while i < 50000 do %>
+							<option value = "<%= i %>">$<%= i %></option>
+						<% i = i + 500
+						end %>
+					</select>
+				</div>
+				<!-- end price -->
+				<!-- start description -->
+				<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+					<label class = "col-xs-12 col-sm-12 col-md-12 form-group" for = "description">Description</label>
+					<textarea rows = "10" cols = "50" name = "listing[description]"><%= @listing.description %></textarea>
+				</div>
+				<!-- end description -->
+				<!-- other options -->
+				<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+					<!-- pet friendly -->
+					<input type = "checkbox" name = "listing[pet_friendly]" value = "false" style = "visibility: hidden" checked = "true"/>
+					<label for = "pet_friendly">Pet Friendly</label>
+					<input type = "checkbox" name = "listing[pet_friendly]" 
+					<% if @listing.pet_friendly == true %> 
+						checked
+					<% end %> />
+					<!-- hot tub -->
+					<input type = "checkbox" name = "listing[hot_tub]" value = "false" style = "visibility: hidden" checked = "true"/>
+					<label for = "hot_tub">Hot Tub</label>
+					<input type = "checkbox" value = "<%= @listing.hot_tub %>" name = "listing[hot_tub]"
+					<% if @listing.hot_tub == true %> 
+						checked
+					<% end %> />
+					<!-- pool -->
+					<input type = "checkbox" name = "listing[pool]" value = "false" style = "visibility: hidden" checked = "true"/>
+					<label for = "pool">Pool</label>
+					<input type = "checkbox" name = "listing[pool]"
+					<% if @listing.pool == true %> 
+						checked
+					<% end %> />
+					<!-- paid utilities -->
+					<input type = "checkbox" name = "listing[paid_utils]" value = "false" style = "visibility: hidden" checked = "true"/>
+					<label for = "paid_utils">Paid Utilities</label>
+					<input type = "checkbox" name = "listing[paid_utils]"
+					<% if @listing.paid_utils == true %> 
+						checked
+					<% end %> />
+					<!-- wheelchair accessible -->
+					<input type = "checkbox" name = "listing[wheelchair_accessible]" value = "false" style = "visibility: hidden" checked = "true"/>
+					<label for = "wheelchair_accessible">Wheelchair Accessible</label>
+					<input type = "checkbox" checked = "true" name = "listing[wheelchair_accessible]"
+					<% if @listing.wheelchair_accessible == true %> 
+						checked
+					<% end %> />
+				</div>
+				<!-- end other options -->
+				<!-- bedrooms -->
+				<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+					<label for = "beds">Number of Bedrooms</label>
+					<input type = "number" name = "listing[beds]" value = "<%= @listing.beds %>" />
+				</div>
+				<!-- end bedrooms -->
+				<!-- bathrooms -->
+				<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+					<label for = "baths">Number of Bathrooms</label>
+					<input type = "number" name = "listing[baths]"value = "<%= @listing.baths %>" />
+				</div>
+				<!-- end bathrooms -->
+				<!-- half-bathrooms -->
+				<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+					<label for = "half_baths">Number of Half Bathrooms</label>
+					<input type = "number" name = "listing[half_baths]" value = "<%= @listing.half_baths %>" />
+				</div>
+				<!-- end half-bathrooms -->
+				<input type = "submit" value = "Update" class="btn btn-default active"/>
 			<br>
 			<br>
 			<a class="btn btn-default btn-primary" href="/landlords" role="button" >Back</a>
-			<!-- A TAG! --> 
+			<!-- END EDIT OPITIONS FOR LANDLORD -->
 		<% end %>
-	<% elsif current_user %>
-			<div class = "left">
+	<!-- LOGGED IN USER VIEW -->
+	<% else %>
+		<div class = "left">
 			<h3>Neighborhood: <%= @listing.neighborhood %></h3>
 			<h3>Price: $<%= @listing.price %></h3>
 			<h3>Description:</h3>
@@ -81,47 +245,16 @@
 				<% end %>
 			<% end %>
 		</div>
-		<div class = "right" >
-			<h3><%= @listing. address.to_s + " " + @listing.city + " " + @listing.state + " " + @listing.zip.to_s %> </h3>
-		<div id = "map" style = "width: 400px; height: 400px;"></div>
-		</div>
-
-		<% @listing.avatars.each do |photo| %>
-			<% @str = photo.file.file %>
-				<%= image_tag("" + @str[75..@str.length], size: "400") %>
-		<% end %>
-	<% else %>
-		<h3>Neighborhood: <%= @listing.neighborhood %></h3>
-		<h3>Price: $<%= @listing.price %></h3>
-		<h3>Description:</h3>
-		<h5><%= @listing.description %></h5>
-		<h3>Bathrooms: <%= @listing.baths %></h3>
-		<h3>Half-Bathrooms: <%= @listing.half_baths %></h3>
-		<h3>Bedrooms: <%= @listing.beds %></h3>
-
-		<% if @listing.wheelchair_accessible ==true || @listing.pet_friendly == true || @listing.hot_tub ==true || @listing.pool == true || @listing.paid_utils == true %>
-			<h3>Other:</h3>
-			<ul>
-				<% if @listing.wheelchair_accessible == true %>
-					<li>Wheelchair Accessible</li>
-				<% end %>
-				<% if @listing.pet_friendly == true %>
-					<li>Pet Friendly</li>
-				<% end %>
-				<% if @listing.hot_tub == true %>
-					<li>Hot Tub</li>
-				<% end %>
-				<% if @listing.pool == true %>
-					<li>Pool</li>
-				<% end %>
-				<% if @listing.paid_utils == true %>
-					<li>Paid Utilities</li>
-				<% end %>
-			</ul>
+		<% if current_user %>
+			<div class = "right" >
+				<h3><%= @listing. address.to_s + " " + @listing.city + " " + @listing.state + " " + @listing.zip.to_s %> </h3>
+			<div id = "map" style = "width: 400px; height: 400px;"></div>
+			</div>
 		<% end %>
 		<% @listing.avatars.each do |photo| %>
 			<% @str = photo.file.file %>
 				<%= image_tag("" + @str[75..@str.length], size: "400") %>
 		<% end %>
 	<% end %>
+	
 </div>

@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   get 'tenants' => 'tenants#index'
   get 'tenants/new' => 'tenants#new'
+  post 'tenants' => 'tenants#create'
 
   get 'listings' => 'listings#index'
   get 'listings/address' => 'listings#address'

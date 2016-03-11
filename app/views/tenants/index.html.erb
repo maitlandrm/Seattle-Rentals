@@ -69,4 +69,121 @@
 		<input type = "submit" value = "Search" class = "btn btn-primary btn-lg">
 
 	</form> 
+		<!-- trigger the modal with a button -->
+	<button type = "button" class = "btn btn-info" data-toggle="modal" data-target = "#more_options">More Options</button>
+	<!-- Modal -->
+	<div id = "more_options" class = "modal fade" role = "dialog">
+		<div class = "modal-dialog">
+
+				<!-- Modal search form  -->
+			<div class = "modal-content">
+				<div class = "modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class = "modal-body">
+					<form method = "post" action = "/listings/find/">
+						<input type = "hidden" name = "authenticity_token" value = "<%= form_authenticity_token %>" />
+						<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+							<label for = "neighborhood">Neighborhood</label>
+							<select id = "neighborhood" class = "form-control" name = "neighborhood">
+								<option value = "Admiral District">Admiral District</option>
+								<option value = "Alki">Alki</option>
+								<option value = "Ballard">Ballard</option>
+								<option value = "Beacon Hill">Beacon Hill</option>
+								<option value = "Belltown">Belltown</option>
+								<option value = "Capitol Hill">Capitol Hill</option>
+								<option value = "Columbia City">Columbia City</option>
+								<option value = "Crown Hill">Crown Hill</option>
+								<option value = "Eastlake">Eastlake</option>
+								<option value = "First Hill">First Hill</option>
+								<option value = "Fremont">Fremont</option>
+								<option value = "Georgetown">Georgetown</option>
+								<option value = "Green Lake">Green Lake</option>
+								<option value = "Harbor Island">Harbor Island</option>
+								<option value = "Licton Springs">Licton Springs</option>
+								<option value = "Loyal Heights">Loyal Heights</option>
+								<option value = "Madison Park">Madison Park</option>
+								<option value = "Madrona">Madrona</option>
+								<option value = "Magnolia">Magnolia</option>
+								<option value = "Maple Leaf">Maple Leaf</option>
+								<option value = "Mercer Island">Mercer Island</option>
+								<option value = "Montlake">Montlake</option>
+								<option value = "Mount Baker">Mount Baker</option>
+								<option value = "Northgate">Northgate</option>
+								<option value = "Othello">Othello</option>
+								<option value = "Phinney Ridge">Phinney Ridge</option>
+								<option value = "Pioneer Square">Pioneer Square</option>
+								<option value = "Aurora"> :( 8 < - </option>
+								<option value = "Queen Anne">Queen Anne</option>
+								<option value = "Rainier Valley">Rainier Valley</option>
+								<option value = "Ravenna">Ravenna</option>
+								<option value = "Sand Point">Sand Point</option>
+								<option value = "Soutlake">Southlake</option>
+								<option value = "U District">U District</option>
+								<option value = "Wallingford">Wallingford</option>
+								<option value = "Wedgewood">Wedgwood</option>
+								<option value = "Westlake">Westlake</option>
+								<option value = "West Seattle">West Seattle</option>
+								<option value = "White Center">White Center</option>
+							</select>
+						</div>
+						<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+							<label for = "price_min">Minimum Price </label>
+							<select name = "price_min" id = "price_min" class = "form-control">
+								<% i = 500
+								while i < 50000 do %>
+									<option value = "<%= i %>">$<%= i %></option>
+								<% i = i + 500
+								end %>
+							</select>
+							<label for = "price_max">Maximum Price</label>
+							<select name = "price_max" id = "price_max" class = "form-control">
+								<% i = 500
+								while i < 50000 do %>
+									<option value = "<%= i %>">$<%= i %></option>
+								<% i = i + 500
+								end %>
+							</select>
+						</div>
+						<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+							<label for = "baths">Number of Bathrooms</label>
+							<input type = "number" name = "baths"/>
+						</div>
+						<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+							<label for = "beds">Number of Bedrooms</label>
+							<input type = "number" name = "beds"/>
+						</div>
+						<div class = "col-xs-12 col-sm-12 col-md-12 form-group">
+							<label for "pet_friendly">Pet Friendly</label>
+							<input type = "checkbox" name = "pet_friendly"/>
+							<label for= "hot_tub">Hot Tub</label>
+							<input type = "checkbox" name = "hot_tub"/>
+							<label for = "pool">Pool</label>
+							<input type = "checkbox" name = "pool"/>
+							<label for = "paid_utils">Paid Utilities</label>
+							<input type = "checkbox" name = "paid_utils"/>
+							<label for = "wheelchair_accessible">Wheelchair Accessible</label>
+							<input type = "checkbox" name = "wheelchair_accessible"/>
+						</div>
+						<input type = "submit" value = "Search" class = "btn btn-primary btn-lg">
+					</form>
+				<!-- close Modal body div -->
+				</div>
+			<!-- close Modal content div -->
+			</div>
+		<!-- close Modal dialog div -->
+		</div>
+	<!-- end modal -->
+	</div>
+
+	<!-- show listings -->
+	<h2>Some Listings</h2>
+	<% @listings.each do |listing| %>
+		<div class = "property">
+			<%= image_tag("" + listing.main[75..listing.main.length], size: "150") %>
+			<h5><%= listing.neighborhood %></h5>
+			<a class="btn btn-default" href="/listings/<%= listing.id %>">View</a> 
+		</div>
+	<% end %>
+	<!-- end listings -->
 </div>
