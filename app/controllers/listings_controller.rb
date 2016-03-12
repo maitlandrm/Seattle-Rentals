@@ -14,9 +14,31 @@ class ListingsController < ApplicationController
 	end
 
 	def find 
-		@listings = Listing.where(neighborhood: params[:neighborhood], price: params[:price_min]..params[:price_max])
+		query = "SELECT * FROM listings WHERE neighborhood = '" + params[:neighborhood] + "' AND price BETWEEN '" + params[:price_min] +"' AND '" + params[:price_max] + "'"
+			if params[:pet_friendly] == "on"
+				query = query + "AND pet_friendly = true "
+			end
+			if params[:hot_tub] == "on"
+				query = query + "AND hot_tub = true "
+			end
+			if params[:pool] == "on"
+				query = query + "AND pool = true "
+			end
+			if params[:paid_utils] == "on"
+				query = query + "AND paid_utils = true "
+			end
+			if params[:wheelchair_accessible] == "on"
+				query = query + "AND wheelchair_accessible = true "
+			end
+			if params[:baths]
+				query = query + "AND baths >= '" + params[:baths] + "' "
+			end
+			if params[:beds]
+				query = query + "AND beds >= '" + params[:beds] + "' "
+			end
+		@listings = Listing.find_by_sql(query)
+
 		if @listings.length > 0 
-			puts "true"
 			render 'index'
 		else
 			flash[:warning] = "Couldn't find any matches! :("
