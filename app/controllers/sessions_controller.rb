@@ -3,7 +3,11 @@ class SessionsController < ApplicationController
 		@user = User.from_omniauth(request.env['omniauth.auth'])
 		if @user
 			session[:user_id] = @user.id
-			flash[:success] = "Welcome, #{@user.name}!"
+			if @user.has_attribute?(:name)
+				flash[:success] = "Welcome, #{@user.name}!"
+			elsif @user.has_attribute?(:last_name)
+				flash[:success] = "Welcome, #{@user.first_name}!"
+			end
 			redirect_to tenants_path
 		else
 			flash[:warning] = "There was an error while trying to authenticate you.."

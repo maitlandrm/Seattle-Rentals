@@ -1,83 +1,26 @@
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRW7rtwBxiUmpxa1hyP8F3kede-D60hm0&libraries=places"></script>
-<script type="text/javascript">
 
-var placeSearch, autocomplete;
-var componentForm = {
-  street_number: 'short_name',
-  route: 'long_name',
-  locality: 'long_name',
-  administrative_area_level_1: 'short_name',
-  country: 'long_name',
-  postal_code: 'short_name'
-};
+<%= javascript_include_tag 'autofill_listing_for_landlord.js' %>
 
-function initAutocomplete() {
-  // Create the autocomplete object, restricting the search to geographical
-  // location types.
-  
-
-  autocomplete = new google.maps.places.Autocomplete(
-      /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')).focus(geolocate()),
-
-      {types: ['geocode']});
-
-  // When the user selects an address from the dropdown, populate the address
-  // fields in the form.
-  autocomplete.addListener('place_changed', fillInAddress);
-}
-
-// [START region_fillform]
-function fillInAddress() {
-  // Get the place details from the autocomplete object.
-  var place = autocomplete.getPlace();
-
-  for (var component in componentForm) {
-    document.getElementById(component).value = '';
-    document.getElementById(component).disabled = false;
-  }
-
-  // Get each component of the address from the place details
-  // and fill the corresponding field on the form.
-  for (var i = 0; i < place.address_components.length; i++) {
-    var addressType = place.address_components[i].types[0];
-    if (componentForm[addressType]) {
-      var val = place.address_components[i][componentForm[addressType]];
-      document.getElementById(addressType).value = val;
-    }
-  }
-}
-// [END region_fillform]
-
-// [START region_geolocation]
-// Bias the autocomplete object to the user's geographical location,
-// as supplied by the browser's 'navigator.geolocation' object.
-function geolocate() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var geolocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-      var circle = new google.maps.Circle({
-        center: geolocation,
-        radius: position.coords.accuracy
-      });
-      autocomplete.setBounds(circle.getBounds());
-    });
-  }
-}
-// [END region_geolocation]
-</script>
 <div class = 'container'>
+	<nav class="navbar navbar-inverse">
+		<div id = 'navbar'>
+			<ul class="nav navbar-nav pull-right">
+				<li><%= link_to 'Home', root_path%></li>
+				<li><%= link_to 'Log Out', logout_path, method: :delete %></li>
+			</ul>
+		</div>
+	</nav>
 	<h1>Welcome Back, <%= current_user.first_name %></h1>
 	<h2>Your Properties</h2>
 	<% @listings.each do |listing| %>
-	<div class = "property">
-		<%= image_tag("" + listing.main[75..listing.main.length], size: "150") %>
-		<p><%= listing.address + " " + listing.city + " " + listing.state + " " + listing.zip.to_s %></p>
-		<p><%= listing.neighborhood %></p>
-		<a class="btn btn-default" href="listings/<%= listing.id %>">Edit</a>
-	</div>
+		<% if listing.landlord_id == current_user.id %>
+		<div class = "property">
+			<%= image_tag("" + listing.main[75..listing.main.length], size: "150") %>
+			<p><%= listing.address %></p>
+			<p><%= listing.neighborhood %></p>
+			<a class="btn btn-default" href="listings/<%= listing.id %>">Edit</a>
+		</div>
+		<% end %>
 	<% end %>
 	<p>Put properties here</p>
 	<h2>Add a Property</h2>
@@ -90,19 +33,7 @@ function geolocate() {
 			</div>
 			<div class = "form-group">
 				<%= f.label :address %>
-				<%= f.text_field :address, :autofocus => true, :html => {id: "autocomplete", :onfocus => "geolocate();"} %>
-			</div>
-			<div class = "form-group">
-				<%= f.label :city %>
-				<%= f.text_field :city %>
-			</div>
-			<div class = "form-group">
-				<%= f.label :state %>
-				<%= f.text_field :state %>
-			</div>
-			<div class = "form-group">
-				<%= f.label :zip %>
-				<%= f.text_field :zip %>
+				<%= f.text_field :address, :autofocus => true, onfocus: "geolocate()", cols: 50 %>
 			</div>
 			<div class = "form-group">
 				<%= f.label :price %>
@@ -150,4 +81,6 @@ function geolocate() {
 
 			<%= f.submit "Submit" %>
 <% end %>
+<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=" + ENV["google_maps_key"] + "&libraries=places&callback=initAutocomplete" %>
+
 	</div>

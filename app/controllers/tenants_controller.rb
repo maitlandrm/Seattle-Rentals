@@ -1,6 +1,8 @@
 class TenantsController < ApplicationController
+	before_action :require_tenants_login, except: [:new, :create]
 	def index
-		@listings = Listing.limit(5)
+		@listings = Listing.all.limit(5).order(created_at: :desc)
+		@favorites = current_user.listings
 	end
 	def new
 	end

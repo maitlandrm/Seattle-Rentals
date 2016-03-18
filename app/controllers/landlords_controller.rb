@@ -1,4 +1,5 @@
 class LandlordsController < ApplicationController
+	before_action :require_landlords_login, except: [:new, :create]
 
 	def index
 		@listings = current_user.listings

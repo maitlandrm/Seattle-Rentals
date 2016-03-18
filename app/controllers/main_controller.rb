@@ -1,5 +1,5 @@
 class MainController < ApplicationController
 	def index
-		@listings = Listing.limit(5)
+		@listings = Listing.all.limit(5).order(created_at: :desc)
 	end
 end

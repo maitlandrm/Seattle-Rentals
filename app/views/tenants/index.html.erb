@@ -1,3 +1,17 @@
+<nav class="navbar navbar-inverse">
+	<div class="container">
+		<div id="navbar">
+			<!-- Start check for login/logout -->
+			<ul class="nav navbar-nav pull-right">
+				<% if current_user.has_attribute?(:image_url) %>
+					<li><%= image_tag current_user.image_url, alt: current_user.name %></li>
+				<% end %>
+				<li><%= link_to 'Log Out', logout_path, method: :delete %></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+			
 <div class = 'container'>
 <h1><%= flash[:success] %></h1>
 
@@ -176,6 +190,20 @@
 		</div>
 	<!-- end modal -->
 	</div>
+	<!-- FAVORITES -->
+	<% if @favorites %>
+		<h2>Your Favorites:</h2>
+		<% @favorites.each do |fav| %>
+			<div class = "favorites">
+				<%= image_tag("" + fav.main[75..fav.main.length], size: "300", class: "photo") %>
+				<h4 class = "neighborhood"><%= fav.neighborhood %></h4>
+				<a class="btn btn-default" href="/listings/<%= fav.id %>">View</a> 
+
+			</div>
+		<% end %>
+	<% else %>
+		<h2>Your favorite listings will show up here!</h2>
+	<% end %>
 
 	<!-- show listings -->
 	<h2>Some Listings</h2>

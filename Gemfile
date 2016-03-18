@@ -36,6 +36,7 @@ gem 'google-api-client'
 gem 'carrierwave', github: 'carrierwaveuploader/carrierwave'
 
 gem 'hirb'
+gem 'figaro'
 
 # Use Unicorn as the app server
 # gem 'unicorn'

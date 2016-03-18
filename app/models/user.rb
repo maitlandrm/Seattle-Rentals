@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
-
+	has_many :favorites, dependent: :destroy
+	has_many :listings, through: :favorites
 		def self.from_omniauth(auth_hash)
 			user = find_by(uid: auth_hash['uid'], provider: auth_hash['provider'])
 			if !user

@@ -11,10 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160226065340) do
+ActiveRecord::Schema.define(version: 20160316222232) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "favorites", force: :cascade do |t|
+    t.integer  "tenant_id"
+    t.integer  "listing_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "user_id"
+  end
+
+  add_index "favorites", ["listing_id"], name: "index_favorites_on_listing_id", using: :btree
+  add_index "favorites", ["tenant_id"], name: "index_favorites_on_tenant_id", using: :btree
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
 
   create_table "landlords", force: :cascade do |t|
     t.string   "first_name"
@@ -91,6 +103,9 @@ ActiveRecord::Schema.define(version: 20160226065340) do
   add_index "users", ["provider"], name: "index_users_on_provider", using: :btree
   add_index "users", ["uid"], name: "index_users_on_uid", using: :btree
 
+  add_foreign_key "favorites", "listings"
+  add_foreign_key "favorites", "tenants"
+  add_foreign_key "favorites", "users"
   add_foreign_key "listings", "landlords"
   add_foreign_key "listings", "tenants"
   add_foreign_key "photos", "listings"

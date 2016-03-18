@@ -30,10 +30,10 @@ class ListingsController < ApplicationController
 			if params[:wheelchair_accessible] == "on"
 				query = query + "AND wheelchair_accessible = true "
 			end
-			if params[:baths]
+			if params[:bath] && params[:baths].length > 0
 				query = query + "AND baths >= '" + params[:baths] + "' "
 			end
-			if params[:beds]
+			if params[:beds] && params[:beds].length > 0
 				query = query + "AND beds >= '" + params[:beds] + "' "
 			end
 		@listings = Listing.find_by_sql(query)
@@ -49,28 +49,33 @@ class ListingsController < ApplicationController
 	def show
 		@listing = Listing.find(params[:id])
 		flash[:listing_id] = @listing.id
-
+		
 	end
 	def address
 		@listing = Listing.find(flash[:listing_id])
-		@address = @listing.address + " " + @listing.city + " " + @listing.state + " " + @listing.zip.to_s
-		puts @address
-		render :json => @address
+		# address = @listing.address
+		data = [@listing.address, ENV["google_maps_key"]]
+		render json: data
 	end
 
 	def update
 		listing = Listing.update(params[:id], listing_params)
 		if listing.save
-			redirect_to '/listings/' + listing.id.to_s	
+			redirect_to landlords_path	
 		else
 			flash[:errors] = listing.errors.full_messages
 			redirect_to '/listings/' + params[:id]
 		end
 	end
 
+	def destroy
+		Listing.destroy(params[:id])
+		redirect_to landlords_path
+	end
+
 
 	private
 	def listing_params
-		params.require(:listing).permit(:neighborhood, :address, :city, :state, :zip, :price, :category, :description, :pet_friendly, :hot_tub, :pool, :paid_utils, :baths, :half_baths, :beds, :wheelchair_accessible, {avatars:[]}, :main)
+		params.require(:listing).permit(:neighborhood, :address, :price, :category, :description, :pet_friendly, :hot_tub, :pool, :paid_utils, :baths, :half_baths, :beds, :wheelchair_accessible, {avatars:[]}, :main)
 	end
 end

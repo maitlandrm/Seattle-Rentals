@@ -1,6 +1,5 @@
 class Landlord < ActiveRecord::Base
 	has_many :listings, dependent: :destroy
-	has_many :photos, through: :listings
 	has_secure_password
 	EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]+)\z/i
   validates :first_name, :last_name, :email, :password, presence: true, on: :create

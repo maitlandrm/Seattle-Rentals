@@ -13,12 +13,14 @@
 	display: inline-block;
 	vertical-align: top;
 	margin-left: 10%;
+	width: 30%;
 }
 
 .left{
 	display: inline-block;
 	vertical-align: top;
 	margin-left: 10%;
+	width: 30%;
 	
 }
 .property{
@@ -27,5 +29,25 @@
 	width: 200px;
 	vertical-align: top;
 }
+#listing_address{
+	width: 50%;
+}
+.photo{
+	margin: 2%;
+	border: 1px solid black;
+}
+.favorites{
+	display: inline-block;
+	margin: 2%;
+	width: 25%;
+}
+.neighborhood{
+	display: inline-block;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+
+
 
 

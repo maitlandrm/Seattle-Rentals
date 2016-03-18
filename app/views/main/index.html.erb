@@ -17,7 +17,27 @@
    }(document, 'script', 'facebook-jssdk'));
 </script>
 <!-- basic search for a listing -->
-<div class = "container" >
+<% if current_user %>
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<div id="navbar">
+				<!-- Start check for login/logout -->
+					<ul class="nav navbar-nav pull-right">
+						<% if current_user.has_attribute?(:business) %>
+							<li><%= link_to 'My Listings', landlords_path %></li>
+						<% else %>
+							<li><%= link_to 'Main Page', tenants_path %></li>
+							<%if current_user.has_attribute?(:image_url) %>
+								<li><%= image_tag current_user.image_url, alt: current_user.name %></li>
+							<% end %>
+						<% end %>
+						<li><%= link_to 'Log Out', logout_path, method: :delete %></li>
+					</ul>
+			</div>
+		</div>
+	</nav>
+<% end %>	
+<div class = "container">
 	<p class = "text-danger"><%= flash[:warning] %></p>
 	<form class = "form-inline" method = "post" action = "/listings/find/">
 		<input type = "hidden" name = "authenticity_token" value = "<%= form_authenticity_token %>" />
@@ -77,9 +97,13 @@
 			<label for = "price_max">Maximum Price</label>
 			<select name = "price_max" id = "price_max" class = "form-control">
 				<% i = 500
-				while i < 50000 do %>
+				while i <= 50000 do %>
 					<option value = "<%= i %>">$<%= i %></option>
-				<% i = i + 500
+					<% if i < 10000
+						i = i + 500
+					else 
+						i = i + 1000
+					end
 				end %>
 			</select>
 		</div>
