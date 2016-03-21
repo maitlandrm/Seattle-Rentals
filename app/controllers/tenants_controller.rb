@@ -12,12 +12,12 @@ class TenantsController < ApplicationController
 			session[:user_id] = tenant.id
 			redirect_to tenants_path
 		else
-			flash[:errors] = @tenant.errors.full_messages
+			flash[:errors] = tenant.errors.full_messages
 			redirect_to tenants_new_path
 		end
 	end
 	private
 	def tenant_params
-		params.require(:tenant).permit(:first_name, :last_name, :email, :password, :password_confirmation)
+		params.require(:tenant).permit(:first_name, :last_name, :email, :phone, :password, :password_confirmation)
 	end
 end

@@ -37,6 +37,8 @@ gem 'carrierwave', github: 'carrierwaveuploader/carrierwave'
 
 gem 'hirb'
 gem 'figaro'
+gem 'soda-ruby', :require => 'soda'
+
 
 # Use Unicorn as the app server
 # gem 'unicorn'

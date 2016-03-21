@@ -1,10 +1,12 @@
 class Landlord < ActiveRecord::Base
 	has_many :listings, dependent: :destroy
 	has_secure_password
+	PHONE_REGEX = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/
 	EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]+)\z/i
-  validates :first_name, :last_name, :email, :password, presence: true, on: :create
-  validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: EMAIL_REGEX }
-  validates :password, presence: true, on: :update, allow_blank: true
+	validates :phone, presence: :true, format: {with: PHONE_REGEX}, :length => {:minimum => 10, :maximum => 15}, on: :create
+	validates :first_name, :last_name, :email, :password, presence: true, on: :create
+	validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: EMAIL_REGEX }
+	validates :password, presence: true, on: :update, allow_blank: true
 	
 	def self.check_session user
 		valid_user = Landlord.find_by(email: user['email'])

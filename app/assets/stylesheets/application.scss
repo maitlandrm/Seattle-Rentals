@@ -9,19 +9,18 @@
 	display: inline-block;
 }
 
-.right{
+.middle{
 	display: inline-block;
 	vertical-align: top;
-	margin-left: 10%;
-	width: 30%;
+	width: 35%;
+	margin-right: 5%;
+	margin-left: 5%;
 }
 
 .left{
 	display: inline-block;
 	vertical-align: top;
-	margin-left: 10%;
-	width: 30%;
-	
+	width: 25%;
 }
 .property{
 	display:inline-block;
@@ -46,8 +45,15 @@
 	margin-left: 10%;
 	margin-right: 10%;
 }
-
-
+.right{
+	display: inline-block;
+	margin-top: 2%;
+	width: 28%;
+}
+#mail{
+	margin-top: 4%;
+	font-weight: bold;
+}
 
 
 
