@@ -81,5 +81,5 @@ test:
 production:
   <<: *default
   database: seattle_rentals_production
-  username: seattle_rentals
+  username: ubuntu
   password: <%= ENV['SEATTLE_RENTALS_DATABASE_PASSWORD'] %>
